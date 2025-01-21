@@ -10,6 +10,7 @@ export const Card = React.memo(
     hovered,
     setHovered,
   }: {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
     card: any;
     index: number;
     hovered: number | null;
@@ -51,6 +52,7 @@ Card.displayName = "Card";
 type Card = {
   title: string;
   description: string;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   src: any;
 };
 

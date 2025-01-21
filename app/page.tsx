@@ -2,7 +2,6 @@ import { CardSpotlightDemo } from "@/components/demo/membership";
 import { NavigationMenuDemo } from "@/components/demo/navbar";
 import { PlaceholdersAndVanishInputDemo } from "@/components/demo/placeholder";
 import { AnimatedTestimonialsDemo } from "@/components/demo/testimonials";
-import { TextGenerateEffectDemo } from "@/components/demo/textreveal";
 import { FocusCardsDemo } from "@/components/demo/why";
 
 
