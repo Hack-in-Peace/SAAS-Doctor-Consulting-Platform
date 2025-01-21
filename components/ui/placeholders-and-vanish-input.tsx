@@ -114,7 +114,7 @@ export function PlaceholdersAndVanishInput({
           const current = newDataRef.current[i];
           if (current.x < pos) {
             newArr.push(current);
-            continue;
+            continue; // Ensure this is a valid statement
           } else {
             if (current.r <= 0) {
               current.r = 0;
