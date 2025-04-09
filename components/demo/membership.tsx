@@ -1,6 +1,59 @@
+"use client"
+
 import { CardSpotlight } from "@/components/ui/card-spotlight";
+import { useState } from "react";
+import Script from "next/script";
+
+//ensuring the razorpay object is recognized properly
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export function CardSpotlightDemo() {
+  const Amount = 99; //subscription fees
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePayment = async ()=>{
+    setIsProcessing(true);
+
+    try {
+
+      //Create order
+      const response = await fetch("api/payment", {method: "POST"});
+      const data = await response.json();
+      
+      //Initialize Razorpay
+      const options = {
+        key: process.env.NEXT_PUBLIC_KEY_ID,
+        amount: Amount * 100,
+        currency: "INR",
+        name: "Consult-Ease",
+        description: "Subscription",
+        order_id: data.orderId,
+        handler: function (response: any) {
+          console.log("Payment successful", response);
+        },
+        prefill: {
+          name: "John Doe",
+          email: "johndoe@example.com",
+          contact: "9999999999",
+        },
+        theme: {
+          color: "#3399cc",
+        },
+      };
+
+      const rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    }catch(error){
+      console.error("Payment failed", error);
+    }finally {
+      setIsProcessing(false);
+    }
+  };
+   
   return (
     <div className="flex gap-[20vw] items-center justify-center mb-[2vh]">
 
@@ -24,6 +77,7 @@ export function CardSpotlightDemo() {
 
     </CardSpotlight>
     <CardSpotlight className="h-96 w-96">
+    <script src="https://checkout.razorpay.com/v1/checkout.js" />
       <p className="text-xl font-bold relative z-20 mt-2 text-white">
         Paid Membership Plan
       </p>
@@ -37,8 +91,11 @@ export function CardSpotlightDemo() {
           <Step title="+ All free membership plans" />
         </ul>
         
-        <button className="px-8 py-2 mt-[9vh] rounded-md bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500">
-        Rs.99/month
+        <button 
+        onClick={handlePayment}
+        disabled={isProcessing}
+        className="px-8 py-2 mt-[9vh] rounded-md bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 disabled:bg-gray-400">
+         {isProcessing  ? "Processing...": "Rs.99/month"}
         </button>
       </div>
 
