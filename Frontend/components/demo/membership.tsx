@@ -12,10 +12,12 @@ declare global {
 }
 
 export function CardSpotlightDemo() {
-  const Amount = 99; //subscription fees
+  const Amount = 999; //subscription fees
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handlePayment = async ()=>{
+
+  
     setIsProcessing(true);
 
     try {
@@ -27,7 +29,7 @@ export function CardSpotlightDemo() {
       //Initialize Razorpay
       const options = {
         key: process.env.NEXT_PUBLIC_KEY_ID,
-        amount: Amount * 100,
+        amount: Amount * 1000,
         currency: "INR",
         name: "Consult-Ease",
         description: "Subscription",
@@ -95,7 +97,7 @@ export function CardSpotlightDemo() {
         onClick={handlePayment}
         disabled={isProcessing}
         className="px-8 py-2 mt-[9vh] rounded-md bg-teal-500 text-white font-bold transition duration-200 hover:bg-white hover:text-black border-2 border-transparent hover:border-teal-500 disabled:bg-gray-400">
-         {isProcessing  ? "Processing...": "Rs.99/month"}
+         {isProcessing  ? "Processing...": "Rs.999/month"}
         </button>
       </div>
 

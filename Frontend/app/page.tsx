@@ -8,7 +8,7 @@ import { FocusCardsDemo } from "@/components/demo/why";
 export default function Home() {
   return (
     <div className="flex flex-col gap-5">
-      <NavigationMenuDemo/>
+
       <PlaceholdersAndVanishInputDemo/>
       <FocusCardsDemo/>
       <AnimatedTestimonialsDemo/>

@@ -5,6 +5,16 @@ import Link from "next/link"
 import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { MailOpen } from "lucide-react"
+import { useState } from "react"
+import { StickyBanner } from "../ui/sticky-banner"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 // import { Icons } from "@/components/icons"
 import {
   NavigationMenu,
@@ -16,6 +26,8 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { Button } from "../ui/button"
+import { toast } from "sonner"
+
 
 const creatorcompo: { title: string; href: string; description: string }[] = [
   {
@@ -61,26 +73,70 @@ const tokenCompo: { title: string; href: string; description: string }[] = [
 ]
 
 export function NavigationMenuDemo() {
+
+
+const [userDet, setUserDet] = useState(() => {
+  const stored = localStorage.getItem('user_det');
+  return stored ? JSON.parse(stored) : null;
+});
+
+const [initials, setInitials] = useState('');
+
+React.useEffect(() => {
+  const stored = localStorage.getItem('user_det');
+  if (stored) {
+    try {
+      console.log(userDet)
+      const parsed = JSON.parse(stored);
+      // setUserDet(parsed);
+
+      const ini1 = parsed?.f_name?.[0]?.toUpperCase() || '';
+      const ini2 = parsed?.l_name?.[0]?.toUpperCase() || '';
+      setInitials(ini1 + ini2);
+    } catch (err) {
+      console.error("Failed to parse user_det", err);
+    }
+  }
+}, []);
+
+
+  const handleLogOut = ()=>{
+    localStorage.removeItem('user_det');
+    toast("Logged Out Successfully!")
+    setTimeout(() => {
+          window.location.reload();
+    }, 1000);
+
+  }
   return (
-    <div className="flex items-center justify-between mx-[2vw] mt-[1vh] bg-transparent">      
-      <Image src={consult_ease_logo}
+    <div>
+    <div>      <StickyBanner className="bg-gradient-to-b from-blue-500 to-blue-600">
+            <p className="mx-0 max-w-[90%] text-white drop-shadow-md">
+              Sign up for ConsultEase today and get 3 months FREE on our Premium Plan – packed with advanced features like video consultations, patient management, and more.
+            </p>
+          </StickyBanner>
+    </div>
+    <div className="flex items-center justify-between mx-[2vw] mt-[1vh] pb-[1vh] bg-transparent">     
+    <Link href={"/"}>
+          <Image src={consult_ease_logo}
       className=" cursor-pointer"
       alt="This is dino"
       width={70}
       height={35}
-    />
+    /></Link> 
+
        <NavigationMenu>
 
 <NavigationMenuList>
 <NavigationMenuItem>
-    <Link href="/home" legacyBehavior passHref>
+    <Link href="/" legacyBehavior passHref>
       <NavigationMenuLink className={navigationMenuTriggerStyle()}>
         Home
       </NavigationMenuLink>
     </Link>
   </NavigationMenuItem>
   <NavigationMenuItem>
-    <Link href="/docs">
+    <Link href="/">
     <NavigationMenuTrigger>Doctors</NavigationMenuTrigger>
     </Link>
     
@@ -90,7 +146,7 @@ export function NavigationMenuDemo() {
           <NavigationMenuLink asChild>
             <a
               className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-muted/50 to-muted p-6 no-underline outline-none focus:shadow-md"
-              href="/docs"
+              href="/"
             >
               {/* <Icons.logo className="h-6 w-6" /> */}
               <div className="mb-2 mt-4 text-lg font-medium">
@@ -105,18 +161,18 @@ export function NavigationMenuDemo() {
             </a>
           </NavigationMenuLink>
         </li>
-        <ListItem href="/docs" title="Dr. Sophia Carter, MBBS, MD">
+        <ListItem href="/" title="Dr. Sophia Carter, MBBS, MD">
         
         Consultant Pediatrician,
         Child Health and Development,
         12 years
         </ListItem>
-        <ListItem href="/docs" title="Dr. Ethan Wilson, MBBS, DM">
+        <ListItem href="/" title="Dr. Ethan Wilson, MBBS, DM">
           Cardiologist,
           Heart and Cardiovascular Diseases,
           18 years
         </ListItem>
-        <ListItem href="/docs" title="Dr. Priya Sharma, MBBS, MD">        
+        <ListItem href="/" title="Dr. Priya Sharma, MBBS, MD">        
         General Practitioner,
         Family Medicine,
         8 years
@@ -142,7 +198,7 @@ export function NavigationMenuDemo() {
     </NavigationMenuContent>
   </NavigationMenuItem>
   <NavigationMenuItem>
-  <Link href="/tokens" legacyBehavior passHref>
+  <Link href="/" legacyBehavior passHref>
   <NavigationMenuTrigger>Tokens</NavigationMenuTrigger>
   </Link>
     
@@ -161,7 +217,7 @@ export function NavigationMenuDemo() {
     </NavigationMenuContent>
   </NavigationMenuItem>
   <NavigationMenuItem>
-    <Link href="/docs" legacyBehavior passHref>
+    <Link href="/" legacyBehavior passHref>
       <NavigationMenuLink className={navigationMenuTriggerStyle()}>
         Appointment Booking
       </NavigationMenuLink>
@@ -169,14 +225,34 @@ export function NavigationMenuDemo() {
   </NavigationMenuItem>
 </NavigationMenuList>
 </NavigationMenu>
-   <Link href="/signup">
-   <Button>
-      <MailOpen /> Login with Email
-    </Button>
+{userDet ? 
+    <div className=" mr-[5vw]">
+     <DropdownMenu>
+      <DropdownMenuTrigger><div className=" bg-blue-400 rounded-full w-10 h-10 flex items-center  justify-center">{`${initials}`}</div></DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuLabel>My Account</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <Link href={"/sub"}>
+         <DropdownMenuItem>Subscription</DropdownMenuItem> 
+        </Link>
+        
+        <DropdownMenuItem className=" text-red-500" onClick={handleLogOut}>Log Out</DropdownMenuItem>
+      </DropdownMenuContent>
+     </DropdownMenu>
+    </div> : 
+   <div>
+  
+    <Link href="/signup">
+      <Button>
+        <MailOpen /> Login with Email
+      </Button>
    </Link>
+  </div>}
+
 
    </div>
-   
+ </div>  
   )
 }
 
