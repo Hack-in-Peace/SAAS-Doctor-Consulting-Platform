@@ -29,11 +29,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      {/* <StickyBanner className="bg-gradient-to-b from-blue-500 to-blue-600">
-        <p className="mx-0 max-w-[90%] text-white drop-shadow-md">
-          Sign up for ConsultEase today and get 3 months FREE on our Premium Plan – packed with advanced features like appointment scheduling, video consultations, patient management, and more.
-        </p>
-      </StickyBanner> */}
+
         <NavigationMenuDemo/>
         <main>{children}</main>
         <Toaster/>

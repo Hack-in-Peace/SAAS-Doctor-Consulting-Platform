@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils"
 import { MailOpen } from "lucide-react"
 import { useState } from "react"
 import { StickyBanner } from "../ui/sticky-banner"
+import { useEffect } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,30 +75,33 @@ const tokenCompo: { title: string; href: string; description: string }[] = [
 
 export function NavigationMenuDemo() {
 
-
-const [userDet, setUserDet] = useState(() => {
-  const stored = localStorage.getItem('user_det');
-  return stored ? JSON.parse(stored) : null;
-});
-
-const [initials, setInitials] = useState('');
-
-React.useEffect(() => {
-  const stored = localStorage.getItem('user_det');
-  if (stored) {
-    try {
-      console.log(userDet)
-      const parsed = JSON.parse(stored);
-      // setUserDet(parsed);
-
-      const ini1 = parsed?.f_name?.[0]?.toUpperCase() || '';
-      const ini2 = parsed?.l_name?.[0]?.toUpperCase() || '';
-      setInitials(ini1 + ini2);
-    } catch (err) {
-      console.error("Failed to parse user_det", err);
-    }
+ 
+  interface UserDet {
+    email: string
+f_name: string,
+l_name: string,
+role : string,
+token: string,
+_id: string
   }
-}, []);
+  const [userDet, setUserDet] = useState<UserDet | null>(null);
+  const [initials, setInitials] = useState('');
+
+  useEffect(() => {
+    const stored = localStorage.getItem('user_det');
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setUserDet(parsed);
+        const ini1 = parsed.f_name?.[0]?.toUpperCase() || '';
+        const ini2 = parsed.l_name?.[0]?.toUpperCase() || '';
+        setInitials(ini1 + ini2);
+        window.location.reload();
+      } catch (err) {
+        console.error("Failed to parse user_det:", err);
+      }
+    }
+  }, []);
 
 
   const handleLogOut = ()=>{
@@ -217,7 +221,7 @@ React.useEffect(() => {
     </NavigationMenuContent>
   </NavigationMenuItem>
   <NavigationMenuItem>
-    <Link href="/" legacyBehavior passHref>
+    <Link href="/appointment" legacyBehavior passHref>
       <NavigationMenuLink className={navigationMenuTriggerStyle()}>
         Appointment Booking
       </NavigationMenuLink>
