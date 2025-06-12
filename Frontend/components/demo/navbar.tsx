@@ -78,11 +78,11 @@ export function NavigationMenuDemo() {
  
   interface UserDet {
     email: string
-f_name: string,
-l_name: string,
-role : string,
-token: string,
-_id: string
+    f_name: string,
+    l_name: string,
+    role : string,
+    token: string,
+    _id: string
   }
   const [userDet, setUserDet] = useState<UserDet | null>(null);
   const [initials, setInitials] = useState('');
@@ -96,7 +96,7 @@ _id: string
         const ini1 = parsed.f_name?.[0]?.toUpperCase() || '';
         const ini2 = parsed.l_name?.[0]?.toUpperCase() || '';
         setInitials(ini1 + ini2);
-        window.location.reload();
+      
       } catch (err) {
         console.error("Failed to parse user_det:", err);
       }
