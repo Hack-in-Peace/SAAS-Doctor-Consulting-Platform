@@ -4,6 +4,6 @@ const { bookAppointment, getAppointmentsForDoctor } = require('../controllers/ap
 const { protect } = require('../middleware/authMiddleware');
 
 router.post('/book', protect, bookAppointment);
-router.get('/doctor', protect, getAppointmentsForDoctor);
+// router.get('/user/:id', protect, getAppointmentsForDoctor);
 
 module.exports = router;
