@@ -1,6 +1,14 @@
+"use client";
+import { useEffect, useState } from "react";
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 
 export function AnimatedTestimonialsDemo() {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  },[]);
+  if (!hasMounted) return null;
   const testimonials = [
     {
       quote:

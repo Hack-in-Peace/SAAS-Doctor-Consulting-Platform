@@ -48,21 +48,41 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     return;
   }
 
+  // try {
+  //   const res = await axios.post(`${be_uri}/users/register`, userDet);
+  //   console.log("Backend response:", res);
+
+  //   if(res.data.message){
+  //     toast(res.data.message)
+  //     return
+  //   }
+  //   localStorage.setItem("user_det", JSON.stringify(res.data));
+  //   toast.success("Registered successfully!");
+  //         router.push("/")
+  //   // Optionally redirect:
+  //   // router.push("/signin");
+  // } catch (error) {
+  //   toast.error("Registration failed. Please try again.");
+  //   console.error("Registration error:", error);
+  // }
+
   try {
-    const res = await axios.post(`${be_uri}/users/register`, userDet);
-    if(res.data.message){
-      toast(res.data.message)
-      return
-    }
+  const res = await axios.post(`${process.env.NEXT_PUBLIC_BE_URI}/users/register`, userDet);
+  console.log("✅ Backend Response:", res);
+
+  // Success
+  if (res.status === 201) {
     localStorage.setItem("user_det", JSON.stringify(res.data));
     toast.success("Registered successfully!");
-          router.push("/")
-    // Optionally redirect:
-    // router.push("/signin");
-  } catch (error) {
-    toast.error("Registration failed. Please try again.");
-    console.error("Registration error:", error);
+    router.push("/");
+  } else {
+    toast.error(res.data.message || "Something went wrong!");
   }
+} catch (error: any) {
+  console.error("❌ Axios error:", error);
+  toast.error(error.response?.data?.message || "Registration failed.");
+}
+
 };
 
   return (

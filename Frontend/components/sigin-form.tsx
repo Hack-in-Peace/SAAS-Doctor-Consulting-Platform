@@ -39,18 +39,30 @@ export default function SignIn() {
     try {
 
       const res = await axios.post(`${be_uri}/users/login`, userDet);
+      // console.log("Backend Response:", res);
 
-      if(res.data.message){
-        toast(res.data.message);
-        return;
-      }
+      // 
+      
+      if (res.status !== 200 && res.status !== 201) {
+  toast.error(res.data.message || "Something went wrong");
+  return;
+}
+
       localStorage.setItem("user_det", JSON.stringify(res.data));
       toast.success("Logged In successfully!");
       router.push("/")
 
-    } catch (error) {
-      toast.error("Registration failed. Please try again.");
-      console.error("Registration error:", error);
+    // } catch (error) {
+    //   toast.error("Login failed. Please try again.");
+    //   console.error("Login error:", error);
+
+    } catch (error: any) {
+  const message = error?.response?.data?.message || "Login failed. Please try again.";
+  toast.error(message);
+  console.error("Login error:", error);
+    
+
+
     }
   };
 

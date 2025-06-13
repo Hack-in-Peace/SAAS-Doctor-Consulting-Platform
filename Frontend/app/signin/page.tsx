@@ -1,3 +1,4 @@
+"use client";
 import SignIn from '@/components/sigin-form'
 import React from 'react'
 
