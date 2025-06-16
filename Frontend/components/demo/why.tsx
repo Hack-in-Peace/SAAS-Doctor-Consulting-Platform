@@ -1,3 +1,4 @@
+"use client"
 import { FocusCards } from "@/components/ui/focus-cards";
 import img1 from "@public/doc-img1.jpg"
 import img3 from "@public/doc-img3.jpg"
