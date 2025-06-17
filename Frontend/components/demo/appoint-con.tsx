@@ -72,10 +72,34 @@ const appointmentData = {
 }
 
 export default function AppointmentConfirmation() {
+  
+  interface AppData {
+    app_type: string,
+    date: string,
+    doctor: string,
+    email: string,
+    f_name: string,
+    l_name: string,
+    phone_num: string,
+    time: string,
+    __v: number,
+    _id: string
+  }
 
-  const [appData, setAppData] = useState<any>(null);
+  const [appData, setAppData] = useState<AppData>({    
+    app_type: "",
+    date: "",
+    doctor: "",
+    email: "",
+    f_name: "",
+    l_name: "",
+    phone_num: "",
+    time: "",
+    __v: 0,
+    _id: ""});
+    
   useEffect(()=>{
-    //@ts-ignore
+    //@ts-expect-error
     setAppData(JSON.parse(localStorage.getItem("appointment")));
     
   },[])

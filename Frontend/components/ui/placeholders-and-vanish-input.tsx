@@ -16,31 +16,33 @@ export function PlaceholdersAndVanishInput({
   const [currentPlaceholder, setCurrentPlaceholder] = useState(0);
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const startAnimation = () => {
-    intervalRef.current = setInterval(() => {
-      setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
-    }, 3000);
-  };
-  const handleVisibilityChange = () => {
-    if (document.visibilityState !== "visible" && intervalRef.current) {
-      clearInterval(intervalRef.current); // Clear the interval when the tab is not visible
-      intervalRef.current = null;
-    } else if (document.visibilityState === "visible") {
-      startAnimation(); // Restart the interval when the tab becomes visible
-    }
-  };
+const startAnimation = useCallback(() => {
+  intervalRef.current = setInterval(() => {
+    setCurrentPlaceholder((prev) => (prev + 1) % placeholders.length);
+  }, 3000);
+}, [placeholders]);
 
-  useEffect(() => {
+const handleVisibilityChange = useCallback(() => {
+  if (document.visibilityState !== "visible" && intervalRef.current) {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  } else if (document.visibilityState === "visible") {
     startAnimation();
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+  }
+}, [startAnimation]);
 
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }, [placeholders]);
+useEffect(() => {
+  startAnimation();
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+
+  return () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+    document.removeEventListener("visibilitychange", handleVisibilityChange);
+  };
+}, [startAnimation, handleVisibilityChange]);
+
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

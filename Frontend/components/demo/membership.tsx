@@ -7,6 +7,7 @@ import { useState } from "react";
 //ensuring the razorpay object is recognized properly
 declare global {
   interface Window {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Razorpay: any;
   }
 }
@@ -34,6 +35,7 @@ export function CardSpotlightDemo() {
         name: "Consult-Ease",
         description: "Subscription",
         order_id: data.orderId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: function (response: any) {
           console.log("Payment successful", response);
         },
