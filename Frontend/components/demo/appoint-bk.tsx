@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { CalendarDays, Clock, MapPin, Phone, Mail, User, Stethoscope, Heart, Brain, Eye, Bone } from "lucide-react"
+import { CalendarDays, Clock, MapPin, Phone, Mail, User, Heart, Brain, Eye, Bone } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation';
 import axios from "axios"

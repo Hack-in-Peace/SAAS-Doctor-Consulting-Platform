@@ -2,7 +2,7 @@
 
 import { CardSpotlight } from "@/components/ui/card-spotlight";
 import { useState } from "react";
-import Script from "next/script";
+
 
 //ensuring the razorpay object is recognized properly
 declare global {

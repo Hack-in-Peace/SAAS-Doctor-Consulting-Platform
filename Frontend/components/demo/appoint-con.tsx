@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "../ui/skeleton"
 import {
@@ -404,7 +404,8 @@ export default function AppointmentConfirmation() {
 // Helper function to convert 12-hour time to 24-hour format
 function convertTo24Hour(time12h: string): string {
   const [time, modifier] = time12h.split(" ")
-  let [hours, minutes] = time.split(":")
+  let [hours, minutes] = time.split(":");
+  minutes = minutes;
   if (hours === "12") {
     hours = "00"
   }
