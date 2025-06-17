@@ -97,9 +97,9 @@ export default function AppointmentConfirmation() {
     time: "",
     __v: 0,
     _id: ""});
-    
+
   useEffect(()=>{
-    //@ts-expect-error
+    // @ts-expect-error — Function has wrong type definition but works at runtime
     setAppData(JSON.parse(localStorage.getItem("appointment")));
     
   },[])
