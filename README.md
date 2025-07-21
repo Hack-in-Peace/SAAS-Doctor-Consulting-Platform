@@ -2,6 +2,11 @@
 
 A full-stack medical consultation platform built using the **MERN stack** (MongoDB, Express.js, React.js, Node.js) and **Next.js 14**, offering patients a seamless experience to book online doctor appointments, manage profiles, and earn reward tokens.
 
+## 🔗 Live Demo
+
+🌐 **Frontend (Vercel)**: [https://consult-ease.vercel.app](https://consult-ease.vercel.app)
+
+
 ## 🚀 Features
 
 - 🔐 **JWT Authentication** – Secure login & session management  
