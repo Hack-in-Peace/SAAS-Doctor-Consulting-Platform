@@ -195,7 +195,7 @@ export function NavigationMenuDemo() {
 
             <NavigationMenuItem>
                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                 <Link href="/">Appointment Booking</Link>
+                 <Link href="/appoint-bk">Appointment Booking</Link>
               </NavigationMenuLink>
              </NavigationMenuItem>
           </NavigationMenuList>

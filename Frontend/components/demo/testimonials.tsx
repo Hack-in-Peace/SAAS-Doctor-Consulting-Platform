@@ -2,7 +2,7 @@
 "use client";
 import { useEffect, useState } from "react";
 
-"use client"
+
 
 import { AnimatedTestimonials } from "@/components/ui/animated-testimonials";
 

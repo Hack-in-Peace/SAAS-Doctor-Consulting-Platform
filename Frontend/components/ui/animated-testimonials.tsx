@@ -40,7 +40,7 @@ export const AnimatedTestimonials = ({
     }
   }, [autoplay]);
 
-<<<<<<< HEAD
+
   // const randomRotateY = () => {
   //   return Math.floor(Math.random() * 21) - 10;
   //};
@@ -48,7 +48,7 @@ export const AnimatedTestimonials = ({
   const [rotateValues] = useState(() =>
   testimonials.map(() => Math.floor(Math.random() * 21) - 10)
 );
-=======
+
   // Generate client-side only rotation values
   useEffect(() => {
     const newRotations = testimonials.map(() => Math.floor(Math.random() * 21) - 10);
@@ -57,7 +57,7 @@ export const AnimatedTestimonials = ({
 
   // Prevent hydration mismatch
   if (rotationValues.length === 0) return null;
->>>>>>> 82120ae13aefc73fbddd37b0d2d9c36848710cda
+
 
   return (
     <div className="max-w-sm md:max-w-4xl mx-auto antialiased font-sans px-4 md:px-8 lg:px-12 py-20">
@@ -72,21 +72,15 @@ export const AnimatedTestimonials = ({
                     opacity: 0,
                     scale: 0.9,
                     z: -100,
-<<<<<<< HEAD
-                    rotate: rotateValues[index],
-=======
                     rotate: rotationValues[index],
->>>>>>> 82120ae13aefc73fbddd37b0d2d9c36848710cda
+
                   }}
                   animate={{
                     opacity: isActive(index) ? 1 : 0.7,
                     scale: isActive(index) ? 1 : 0.95,
                     z: isActive(index) ? 0 : -100,
-<<<<<<< HEAD
-                    rotate: isActive(index) ? 0 : rotateValues[index],
-=======
                     rotate: isActive(index) ? 0 : rotationValues[index],
->>>>>>> 82120ae13aefc73fbddd37b0d2d9c36848710cda
+
                     zIndex: isActive(index)
                       ? 999
                       : testimonials.length + 2 - index,
@@ -96,11 +90,8 @@ export const AnimatedTestimonials = ({
                     opacity: 0,
                     scale: 0.9,
                     z: 100,
-<<<<<<< HEAD
-                    rotate: rotateValues[index],
-=======
                     rotate: rotationValues[index],
->>>>>>> 82120ae13aefc73fbddd37b0d2d9c36848710cda
+
                   }}
                   transition={{
                     duration: 0.4,
