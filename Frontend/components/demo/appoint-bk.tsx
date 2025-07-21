@@ -13,9 +13,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { CalendarDays, Clock, MapPin, Phone, Mail, User, Stethoscope, Heart, Brain, Eye, Bone } from "lucide-react"
+import { CalendarDays, Clock, MapPin, Phone, Mail, User, Heart, Brain, Eye, Bone } from "lucide-react"
 import { toast } from "sonner"
 import { useRouter } from 'next/navigation';
+import axios from "axios"
+
 const doctors = [
   {
     id: "1",
@@ -75,10 +77,13 @@ export default function Component() {
   const [selectedDoctor, setSelectedDoctor] = useState("")
   const [selectedTime, setSelectedTime] = useState("")
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    doctor: "",
+    f_name: "",
+    l_name: "",
+    time: "",
+    date:"",
     email: "",
-    phone: "",
+    phone_num: "",
     dateOfBirth: "",
     gender: "",
     appointmentType: "",
@@ -87,23 +92,39 @@ export default function Component() {
     emergencyContact: "",
     emergencyPhone: "",
   })
-
+  const BE_URI = process.env.NEXT_PUBLIC_BE_URI
   const selectedDoctorData = doctors.find((doc) => doc.id === selectedDoctor)
 
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  // const handleInputChange = (field: string, value: string) => {
+  //   setFormData((prev) => ({ ...prev, [field]: value }))
+  // }
+  
+  const docHandleSelect = (docId: string, docName: string) =>{
+         setSelectedDoctor(docId);
+         setFormData({...formData, doctor: docName, time: selectedTime})
   }
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault()
     // Handle form submission
-    console.log("Appointment booked:", {
-      ...formData,
-      doctor: selectedDoctorData?.name,
-      date: selectedDate,
-      time: selectedTime,
-    })
-   
+    
+    const date: string = selectedDate?.toString() ?? "";
+    setFormData({...formData, date: date});
+    const userDetStr = localStorage.getItem("user_det");
+    const userToken = userDetStr ? JSON.parse(userDetStr).token : null;
+    if (!userToken) {
+      toast.error("User not logged in or user data missing.");
+      return;
+    }
+    console.log(userToken)
+    const reqBody = {doctor: formData.doctor, f_name: formData.f_name, l_name: formData.l_name, email: formData.email, phone_num: formData.phone_num  }
+    const res = await axios.post(`${BE_URI}/appointments/book`, reqBody, {
+      headers: {
+        Authorization: `Bearer ${userToken}`
+      }
+    });
+
+    const resStr = JSON.stringify(res.data)
+    localStorage.setItem("appointment", resStr);
     toast.success("Appointment booked successfull!");
     router.push("/patientDet")
   }
@@ -112,10 +133,10 @@ export default function Component() {
     selectedDate &&
     selectedDoctor &&
     selectedTime &&
-    formData.firstName &&
-    formData.lastName &&
+    formData.f_name &&
+    formData.l_name &&
     formData.email &&
-    formData.phone
+    formData.phone_num
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -151,7 +172,7 @@ export default function Component() {
                             ? "border-blue-500 bg-blue-50"
                             : "border-gray-200 hover:border-gray-300"
                         }`}
-                        onClick={() => setSelectedDoctor(doctor.id)}
+                        onClick={()=>{docHandleSelect(doctor.id, doctor.name)}}
                       >
                         <div className="flex items-start gap-3">
                           <Avatar className="h-12 w-12">
@@ -195,6 +216,7 @@ export default function Component() {
                       mode="single"
                       selected={selectedDate}
                       onSelect={setSelectedDate}
+                      
                       disabled={(date) => date < new Date() || date.getDay() === 0}
                       className="rounded-md border"
                     />
@@ -236,8 +258,8 @@ export default function Component() {
                     <Label htmlFor="firstName">First Name *</Label>
                     <Input
                       id="firstName"
-                      value={formData.firstName}
-                      onChange={(e) => handleInputChange("firstName", e.target.value)}
+                      value={formData.f_name}
+                      onChange={(e) => {setFormData({...formData, f_name: e.target.value})}}
                       placeholder="Enter your first name"
                     />
                   </div>
@@ -245,8 +267,8 @@ export default function Component() {
                     <Label htmlFor="lastName">Last Name *</Label>
                     <Input
                       id="lastName"
-                      value={formData.lastName}
-                      onChange={(e) => handleInputChange("lastName", e.target.value)}
+                      value={formData.l_name}
+                      onChange={(e) => {setFormData({...formData, l_name: e.target.value})}}
                       placeholder="Enter your last name"
                     />
                   </div>
@@ -258,7 +280,7 @@ export default function Component() {
                       id="email"
                       type="email"
                       value={formData.email}
-                      onChange={(e) => handleInputChange("email", e.target.value)}
+                      onChange={(e) => {setFormData({...formData, email: e.target.value})}}
                       placeholder="Enter your email"
                     />
                   </div>
@@ -267,8 +289,8 @@ export default function Component() {
                     <Input
                       id="phone"
                       type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange("phone", e.target.value)}
+                      value={formData.phone_num}
+                      onChange={(e) => {setFormData({...formData, phone_num: e.target.value})}}
                       placeholder="Enter your phone number"
                     />
                   </div>
@@ -280,12 +302,12 @@ export default function Component() {
                       id="dateOfBirth"
                       type="date"
                       value={formData.dateOfBirth}
-                      onChange={(e) => handleInputChange("dateOfBirth", e.target.value)}
+                      onChange={(e) => {setFormData({...formData, dateOfBirth: e.target.value})}}
                     />
                   </div>
                   <div>
                     <Label htmlFor="gender">Gender</Label>
-                    <Select value={formData.gender} onValueChange={(value) => handleInputChange("gender", value)}>
+                    <Select value={formData.gender} onValueChange={(value) => {setFormData({...formData, gender: value})}}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select gender" />
                       </SelectTrigger>
@@ -302,7 +324,7 @@ export default function Component() {
                   <Label htmlFor="appointmentType">Appointment Type</Label>
                   <Select
                     value={formData.appointmentType}
-                    onValueChange={(value) => handleInputChange("appointmentType", value)}
+                    onValueChange={(value) => {setFormData({...formData, appointmentType: value})}}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select appointment type" />
@@ -321,7 +343,7 @@ export default function Component() {
                   <Textarea
                     id="reason"
                     value={formData.reason}
-                    onChange={(e) => handleInputChange("reason", e.target.value)}
+                    onChange={(e) => {setFormData({...formData, reason: e.target.value})}}
                     placeholder="Please describe your symptoms or reason for the appointment"
                     rows={3}
                   />
@@ -331,7 +353,7 @@ export default function Component() {
                   <Input
                     id="insurance"
                     value={formData.insurance}
-                    onChange={(e) => handleInputChange("insurance", e.target.value)}
+                    onChange={(e) => {setFormData({...formData, insurance: e.target.value})}}
                     placeholder="Enter your insurance provider"
                   />
                 </div>
@@ -342,7 +364,7 @@ export default function Component() {
                     <Input
                       id="emergencyContact"
                       value={formData.emergencyContact}
-                      onChange={(e) => handleInputChange("emergencyContact", e.target.value)}
+                      onChange={(e) => {setFormData({...formData, emergencyContact: e.target.value})}}
                       placeholder="Emergency contact name"
                     />
                   </div>
@@ -352,7 +374,7 @@ export default function Component() {
                       id="emergencyPhone"
                       type="tel"
                       value={formData.emergencyPhone}
-                      onChange={(e) => handleInputChange("emergencyPhone", e.target.value)}
+                      onChange={(e) => {setFormData({...formData, emergencyPhone: e.target.value})}}
                       placeholder="Emergency contact phone"
                     />
                   </div>

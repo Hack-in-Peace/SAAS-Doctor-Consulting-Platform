@@ -108,7 +108,7 @@ export default function SignIn() {
             </span>
             <BottomGradient />
           </button>
-        <div>Don't have an account? <span className=" text-blue-500 underline-offset-1 underline"><Link href={"/signup"}>Sign Up</Link> </span></div>
+        <div>Don&apos;t have an account? <span className=" text-blue-500 underline-offset-1 underline"><Link href={"/signup"}>Sign Up</Link> </span></div>
         </div>
       </form>
     </div>

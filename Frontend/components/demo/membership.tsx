@@ -2,11 +2,12 @@
 
 import { CardSpotlight } from "@/components/ui/card-spotlight";
 import { useState } from "react";
-import Script from "next/script";
+ import Script from "next/script";
 
 //ensuring the razorpay object is recognized properly
 declare global {
   interface Window {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Razorpay: any;
   }
 }
@@ -34,6 +35,7 @@ export function CardSpotlightDemo() {
         name: "Consult-Ease",
         description: "Subscription",
         order_id: data.orderId,
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         handler: function (response: any) {
           console.log("Payment successful", response);
         },
@@ -79,7 +81,12 @@ export function CardSpotlightDemo() {
 
     </CardSpotlight>
     <CardSpotlight className="h-96 w-96">
-    <script src="https://checkout.razorpay.com/v1/checkout.js" />
+
+
+<Script
+  src="https://checkout.razorpay.com/v1/checkout.js"
+  strategy="afterInteractive"
+/>
       <p className="text-xl font-bold relative z-20 mt-2 text-white">
         Paid Membership Plan
       </p>

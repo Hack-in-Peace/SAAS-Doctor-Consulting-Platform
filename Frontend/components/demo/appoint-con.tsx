@@ -3,8 +3,9 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "../ui/skeleton"
 import {
   CheckCircle,
   Calendar,
@@ -22,6 +23,7 @@ import {
   QrCode,
   CalendarPlus,
 } from "lucide-react"
+import { useEffect, useState } from "react"
 
 // Sample appointment data - in real app this would come from props or API
 const appointmentData = {
@@ -56,8 +58,8 @@ const appointmentData = {
   },
   billing: {
     consultationFee: 150,
-    bookingFee: 10,
-    total: 160,
+    bookingFee: 50,
+    total: 200,
     paymentMethod: "Credit Card ending in 4567",
     paymentStatus: "Paid",
   },
@@ -70,6 +72,37 @@ const appointmentData = {
 }
 
 export default function AppointmentConfirmation() {
+  
+  interface AppData {
+    app_type: string,
+    date: string,
+    doctor: string,
+    email: string,
+    f_name: string,
+    l_name: string,
+    phone_num: string,
+    time: string,
+    __v: number,
+    _id: string
+  }
+
+  const [appData, setAppData] = useState<AppData>({    
+    app_type: "",
+    date: "",
+    doctor: "",
+    email: "",
+    f_name: "",
+    l_name: "",
+    phone_num: "",
+    time: "",
+    __v: 0,
+    _id: ""});
+
+  useEffect(()=>{
+    // @ts-expect-error — Function has wrong type definition but works at runtime
+    setAppData(JSON.parse(localStorage.getItem("appointment")));
+    
+  },[])
   const appointmentDate = new Date(
     `${appointmentData.appointment.date}T${convertTo24Hour(appointmentData.appointment.time)}`,
   )
@@ -83,7 +116,7 @@ export default function AppointmentConfirmation() {
     const endDate =
       new Date(appointmentDate.getTime() + 30 * 60000).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z"
 
-    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Doctor Appointment - ${appointmentData.doctor.name}&dates=${startDate}/${endDate}&details=Appointment with ${appointmentData.doctor.name} (${appointmentData.doctor.specialty})&location=${appointmentData.location.address}`
+    const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=Doctor Appointment - ${appData.doctor}&dates=${startDate}/${endDate}&details=Appointment with ${appData.doctor} (Cardiology)&location=1234 Procrastination Avenue, Nowhereville`
 
     window.open(calendarUrl, "_blank")
   }
@@ -94,7 +127,9 @@ export default function AppointmentConfirmation() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
+    <div>
+      {appData? 
+       <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Success Header */}
         <div className="text-center mb-8">
@@ -104,7 +139,7 @@ export default function AppointmentConfirmation() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Appointment Confirmed!</h1>
           <p className="text-gray-600">Your appointment has been successfully booked</p>
           <Badge variant="secondary" className="mt-2">
-            Confirmation #{appointmentData.confirmationNumber}
+            Confirmation #{appData._id}
           </Badge>
         </div>
 
@@ -123,25 +158,22 @@ export default function AppointmentConfirmation() {
                 {/* Doctor Information */}
                 <div className="flex items-start gap-4 p-4 bg-blue-50 rounded-lg">
                   <Avatar className="h-16 w-16">
-                    <AvatarImage
-                      src={appointmentData.doctor.image || "/placeholder.svg"}
-                      alt={appointmentData.doctor.name}
-                    />
+            
                     <AvatarFallback>
                       <Heart className="h-8 w-8" />
                     </AvatarFallback>
                   </Avatar>
                   <div className="flex-1">
-                    <h3 className="text-lg font-semibold text-gray-900">{appointmentData.doctor.name}</h3>
-                    <p className="text-gray-600">{appointmentData.doctor.specialty}</p>
+                    <h3 className="text-lg font-semibold text-gray-900">{appData.doctor}</h3>
+                    <p className="text-gray-600">Cardiology</p>
                     <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                       <div className="flex items-center gap-1">
                         <Phone className="h-4 w-4" />
-                        {appointmentData.doctor.phone}
+                        +91 1313131313
                       </div>
                       <div className="flex items-center gap-1">
                         <Mail className="h-4 w-4" />
-                        {appointmentData.doctor.email}
+                        support@consultease.com
                       </div>
                     </div>
                   </div>
@@ -166,7 +198,7 @@ export default function AppointmentConfirmation() {
                       <div className="flex items-center gap-2 text-gray-600">
                         <Clock className="h-4 w-4" />
                         <span>
-                          {appointmentData.appointment.time} ({appointmentData.appointment.duration})
+                          {appData.time} (30 mins)
                         </span>
                       </div>
                     </div>
@@ -179,10 +211,10 @@ export default function AppointmentConfirmation() {
                       <span className="font-medium">Location</span>
                     </div>
                     <div className="pl-7 space-y-1">
-                      <p className="font-semibold">{appointmentData.location.name}</p>
-                      <p className="text-gray-600">{appointmentData.location.address}</p>
-                      <p className="text-gray-600">{appointmentData.location.floor}</p>
-                      <p className="text-sm text-green-600">{appointmentData.location.parking}</p>
+                      <p className="font-semibold">Consul-ease hospital</p>
+                      <p className="text-gray-600">1234 Procrastination Avenue, Nowhereville</p>
+                      <p className="text-gray-600">4th floor</p>
+                      <p className="text-sm text-green-600">Parking Available</p>
                     </div>
                   </div>
                 </div>
@@ -198,11 +230,11 @@ export default function AppointmentConfirmation() {
                   <div className="pl-7 space-y-2">
                     <div>
                       <span className="text-sm text-gray-500">Type:</span>
-                      <p className="font-medium">{appointmentData.appointment.type}</p>
+                      <p className="font-medium">General Enquiry</p>
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Reason for visit:</span>
-                      <p className="text-gray-700">{appointmentData.appointment.reason}</p>
+                      <p className="text-gray-700">Heart Pain</p>
                     </div>
                   </div>
                 </div>
@@ -222,22 +254,22 @@ export default function AppointmentConfirmation() {
                   <div className="space-y-3">
                     <div>
                       <span className="text-sm text-gray-500">Patient Name:</span>
-                      <p className="font-medium">{appointmentData.patient.name}</p>
+                      <p className="font-medium">{`${appData.f_name} ${appData.l_name}`}</p>
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Email:</span>
-                      <p className="text-gray-700">{appointmentData.patient.email}</p>
+                      <p className="text-gray-700">{appData.email}</p>
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Phone:</span>
-                      <p className="text-gray-700">{appointmentData.patient.phone}</p>
+                      <p className="text-gray-700">{appData.phone_num}</p>
                     </div>
                   </div>
                   <div className="space-y-3">
                     <div>
                       <span className="text-sm text-gray-500">Date of Birth:</span>
                       <p className="text-gray-700">
-                        {new Date(appointmentData.patient.dateOfBirth).toLocaleDateString("en-US", {
+                        {new Date(appointmentData.appointment.date).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "long",
                           day: "numeric",
@@ -246,7 +278,7 @@ export default function AppointmentConfirmation() {
                     </div>
                     <div>
                       <span className="text-sm text-gray-500">Insurance:</span>
-                      <p className="text-gray-700">{appointmentData.patient.insurance}</p>
+                      <p className="text-gray-700">Full Insurance</p>
                     </div>
                   </div>
                 </div>
@@ -302,16 +334,16 @@ export default function AppointmentConfirmation() {
               <CardContent className="space-y-3">
                 <div className="flex justify-between text-sm">
                   <span>Consultation Fee</span>
-                  <span>${appointmentData.billing.consultationFee}</span>
+                  <span>Rs {appointmentData.billing.consultationFee}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span>Booking Fee</span>
-                  <span>${appointmentData.billing.bookingFee}</span>
+                  <span>Rs {appointmentData.billing.bookingFee}</span>
                 </div>
                 <Separator />
                 <div className="flex justify-between font-semibold">
                   <span>Total Paid</span>
-                  <span>${appointmentData.billing.total}</span>
+                  <span>Rs {appointmentData.billing.total}</span>
                 </div>
                 <div className="text-xs text-gray-500">
                   <p>Payment Method: {appointmentData.billing.paymentMethod}</p>
@@ -380,14 +412,24 @@ export default function AppointmentConfirmation() {
           </p>
         </div>
       </div>
+      </div>  
+      
+      :
+      <div>
+       <Skeleton/>
+      </div>
+    }
     </div>
+    
+ 
   )
 }
 
 // Helper function to convert 12-hour time to 24-hour format
 function convertTo24Hour(time12h: string): string {
   const [time, modifier] = time12h.split(" ")
-  let [hours, minutes] = time.split(":")
+  let [hours, minutes] = time.split(":");
+  minutes = minutes;
   if (hours === "12") {
     hours = "00"
   }

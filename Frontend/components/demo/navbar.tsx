@@ -1,5 +1,4 @@
 
-
 "use client";
 
 import consult_ease_logo from "@public/consult_ease_logo.png";
