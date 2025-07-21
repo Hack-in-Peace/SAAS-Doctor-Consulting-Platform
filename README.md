@@ -15,14 +15,14 @@ A full-stack medical consultation platform built using the **MERN stack** (Mongo
 - 💰 **Token Reward System** – Earn tokens after successful consultations  
 - 💡 **Responsive UI** – Built with **Tailwind CSS**, **ShadCN UI**, and **Lucide Icons**  
 - 🌐 **Fully Functional Backend API** – Built with Express and MongoDB  
-- ☁️ **Deployed using Vercel (frontend)** and **Render (backend)** *(optional)*
+
 
 ## 🧱 Tech Stack
 
 - **Frontend**: React.js, Next.js 14, Tailwind CSS, ShadCN UI, TypeScript  
 - **Backend**: Node.js, Express.js, MongoDB, JWT  
-- **Icons & Toasts**: Lucide Icons, Sonner  
-- **Deployment**: Vercel, Render  
+- **Icons & Toasts**: Lucide Icons,   
+- **Deployment**: Vercel  
 
 ## 🖼️ Screenshots
 
@@ -45,7 +45,7 @@ consult-ease/
 
 ### 1. Clone the Repository
 
-git clone https://github.com/your-username/SAAS-Doctor-Consulting-Platform.git
+git clone https://github.com/Hack-in-Peace/SAAS-Doctor-Consulting-Platform.git
 cd consult-ease
 npm install
 cd backend
